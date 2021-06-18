@@ -26,6 +26,7 @@ val deg : Float = 90f
 val strokeFactor : Float = 90f
 val rFactor : Float = 18.2f
 val boxFactor : Float = 3.4f
+val backColor : Int = Color.parseColor("#BDBDBD")
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -33,7 +34,7 @@ fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale
 
 fun Canvas.drawBallInSquare(scale : Float, w : Float, h : Float, paint : Paint) {
     val size : Float = Math.min(w, h) / boxFactor
-    val r : Float = Math.min(w, h) / boxFactor
+    val r : Float = Math.min(w, h) / rFactor
     val sc1 : Float = scale.divideScale(0, parts)
     val sc2 : Float = scale.divideScale(1, parts)
     val sc7 : Float = scale.divideScale(6, parts)
@@ -191,6 +192,29 @@ class BallInSquarePathView(ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : BallInSquarePathView) {
+
+        private val bisp : BallInSquarePath = BallInSquarePath(0)
+        private val animator : Animator = Animator(view)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            bisp.draw(canvas, paint)
+            animator.animate {
+                bisp.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            bisp.startUpdating {
+                animator.start()
+            }
         }
     }
 }
