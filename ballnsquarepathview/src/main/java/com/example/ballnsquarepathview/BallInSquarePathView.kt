@@ -20,7 +20,7 @@ val colors : Array<Int> = arrayOf(
 }.toTypedArray()
 val lines : Int = 4
 val parts : Int = 4 + lines
-val scGap : Float = 0.02f / parts
+val scGap : Float = 0.04f / parts
 val delay : Long = 20
 val deg : Float = 90f
 val strokeFactor : Float = 90f
@@ -40,6 +40,9 @@ fun Canvas.drawBallInSquare(scale : Float, w : Float, h : Float, paint : Paint) 
     val sc7 : Float = scale.divideScale(6, parts)
     val sc8 : Float = scale.divideScale(7, parts)
     val a : Float = size * (sc1 - sc8)
+    if (sc1 <= 0f || sc8 >= 1) {
+        return
+    }
     save()
     translate(w / 2, h / 2)
     paint.style = Paint.Style.STROKE
@@ -50,7 +53,9 @@ fun Canvas.drawBallInSquare(scale : Float, w : Float, h : Float, paint : Paint) 
     for (j in 0..(lines - 1)) {
         val scj : Float = scale.divideScale(2 + j, parts)
         rot += deg * Math.floor(scj.toDouble()).toFloat()
-        y += (size - 2 * r) * scj
+        if (scj > 0f && scj < 1) {
+            y = -size / 2 + r + (size - 2 * r) * scj
+        }
     }
     save()
     rotate(rot)
