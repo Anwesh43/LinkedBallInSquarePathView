@@ -219,4 +219,12 @@ class BallInSquarePathView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : BallInSquarePathView {
+            val view : BallInSquarePathView = BallInSquarePathView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
