@@ -1,0 +1,3 @@
+include ':ballnsquarepathview'
+include ':app'
+rootProject.name = "LinkedBallInSquarePathView"
